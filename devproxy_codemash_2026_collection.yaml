@@ -4,8 +4,9 @@ name: DevProxy
 meta:
   id: wrk_74bb4bf55e9e42db915e5459c77eabe5
   created: 1764797759402
-  modified: 1764856234634
-  description: ""
+  modified: 1764858189939
+  description: Import this into Insomnia to run the same requests that were
+    demonstrated in the CodeMash presentation
 collection:
   - name: 1 Default Config
     meta:
@@ -96,7 +97,7 @@ collection:
     meta:
       id: fld_49d67089614a41aebb56e4a52fe85570
       created: 1764857220033
-      modified: 1764857250072
+      modified: 1764859105628
       sortKey: -1764856708365
       description: ""
     children:
@@ -105,7 +106,7 @@ collection:
         meta:
           id: req_d52be1ae0efe496981f98c887120da91
           created: 1764857327781
-          modified: 1764857396539
+          modified: 1764858962041
           isPrivate: false
           description: ""
           sortKey: -1764857327781
@@ -115,6 +116,17 @@ collection:
             value: insomnia/12.1.0
             description: ""
             disabled: false
+        scripts:
+          afterResponse: |+
+            
+            const statusCode = insomnia.response.code;
+
+            insomnia.test('Check if status is 200', () => {
+                insomnia.expect(insomnia.response.code).to.eql(200);
+            });
+
+
+
         settings:
           renderRequestBody: true
           encodeUrl: true
@@ -128,11 +140,11 @@ cookieJar:
   meta:
     id: jar_4b6f5908145a84f3ea823d3c2a7e5ded3df1d6d1
     created: 1764797759417
-    modified: 1764797759417
+    modified: 1764859105620
 environments:
   name: Base Environment
   meta:
     id: env_4b6f5908145a84f3ea823d3c2a7e5ded3df1d6d1
     created: 1764797759415
-    modified: 1764797759415
+    modified: 1764859105626
     isPrivate: false
