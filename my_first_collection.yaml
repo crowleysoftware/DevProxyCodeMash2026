@@ -1,42 +1,128 @@
 type: collection.insomnia.rest/5.0
 schema_version: "5.1"
-name: My first collection
+name: DevProxy
 meta:
   id: wrk_74bb4bf55e9e42db915e5459c77eabe5
   created: 1764797759402
-  modified: 1764797759402
+  modified: 1764856234634
   description: ""
 collection:
-  - url: https://jsonplaceholder.typicode.com/todos/1
-    name: Todos
-    meta:
-      id: req_9d8487b29c8e432f884f3da53e79f98f
-      created: 1764797759422
-      modified: 1764797838560
-      isPrivate: false
-      description: ""
-      sortKey: -1764797759422
-    method: GET
-    headers:
-      - name: User-Agent
-        value: insomnia/12.1.0
-        description: ""
-        disabled: false
-    settings:
-      renderRequestBody: true
-      encodeUrl: true
-      followRedirects: global
-      cookies:
-        send: true
-        store: true
-      rebuildPath: true
   - name: 1 Default Config
     meta:
       id: fld_c114e6b883724b4daacf4a2401e18b80
       created: 1764797815376
-      modified: 1764797815376
-      sortKey: -1764797815376
+      modified: 1764856939298
+      sortKey: -1764856708415
       description: ""
+    children:
+      - url: https://jsonplaceholder.typicode.com/posts
+        name: Posts
+        meta:
+          id: req_9d8487b29c8e432f884f3da53e79f98f
+          created: 1764797759422
+          modified: 1764856814170
+          isPrivate: false
+          description: ""
+          sortKey: -1764856814147
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.1.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: 2 Custom Random Error
+    meta:
+      id: fld_763cf0fc4f7146698910c69cd0240b33
+      created: 1764856708315
+      modified: 1764857259250
+      sortKey: -1764856708390
+      description: ""
+    children:
+      - url: https://jsonplaceholder.typicode.com/todos/1
+        name: Todos
+        meta:
+          id: req_53f0c1e1c0fc4452971b39b0d7e8a2dd
+          created: 1764856714430
+          modified: 1764856913650
+          isPrivate: false
+          description: ""
+          sortKey: -1764856714430
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.1.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: https://jsonplaceholder.typicode.com/users/1
+        name: Users
+        meta:
+          id: req_21a348453c8044c9ae8703c5989de22e
+          created: 1764856739066
+          modified: 1764856906767
+          isPrivate: false
+          description: ""
+          sortKey: -1764856714530
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.1.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: 3 Rate Limit
+    meta:
+      id: fld_49d67089614a41aebb56e4a52fe85570
+      created: 1764857220033
+      modified: 1764857250072
+      sortKey: -1764856708365
+      description: ""
+    children:
+      - url: https://jsonplaceholder.typicode.com/posts/1
+        name: Posts
+        meta:
+          id: req_d52be1ae0efe496981f98c887120da91
+          created: 1764857327781
+          modified: 1764857396539
+          isPrivate: false
+          description: ""
+          sortKey: -1764857327781
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.1.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
 cookieJar:
   name: Default Jar
   meta:
