@@ -12,9 +12,73 @@ collection:
     meta:
       id: fld_c114e6b883724b4daacf4a2401e18b80
       created: 1764797815376
-      modified: 1764856939298
+      modified: 1764860710949
       sortKey: -1764856708415
-      description: ""
+      description: >
+        # Default Configuration
+
+
+        This example demonstrates how Dev Proxy works if you simply start it up
+        without any custom configuration.
+
+
+        All other examples will have a custom devproxyrc.json file but this
+        example just uses the default configuration that is installed (on
+        Windows) at C:\Users\<your user>\AppData\Local\Programs\Dev Proxy
+
+
+        The default config gives you retry and generic errors. It only
+        intercepts requests for `https://jsonplaceholder.typicode.com/*`
+
+
+        ## Steps:
+
+        1. Run `devproxy` at the command prompt from any folder that does not
+        already contain a devproxyrc.json file so that you are sure to get the
+        "in-the-box" configuration.
+
+        1. Make requests to jsonplacehoder, for example:
+        https://jsonplaceholder.typicode.com/posts/1
+
+        1. Observe the random errors and successes as you repeat the request.
+
+
+        > DevProxy default config for reference
+
+
+        ````
+
+        {
+          "$schema": "https://raw.githubusercontent.com/dotnet/dev-proxy/main/schemas/v2.0.0/rc.schema.json",
+          "plugins": [
+            {
+              "name": "RetryAfterPlugin",
+              "enabled": true,
+              "pluginPath": "~appFolder/plugins/DevProxy.Plugins.dll"
+            },
+            {
+              "name": "GenericRandomErrorPlugin",
+              "enabled": true,
+              "pluginPath": "~appFolder/plugins/DevProxy.Plugins.dll",
+              "configSection": "genericRandomErrorPlugin"
+            }
+          ],
+          "urlsToWatch": [
+            "https://jsonplaceholder.typicode.com/*"
+          ],
+          "genericRandomErrorPlugin": {
+            "$schema": "https://raw.githubusercontent.com/dotnet/dev-proxy/main/schemas/v2.0.0/genericrandomerrorplugin.schema.json",
+            "errorsFile": "devproxy-errors.json",
+            "rate": 50
+          },
+          "logLevel": "information",
+          "newVersionNotification": "stable",
+          "showSkipMessages": true,
+          "showTimestamps": true,
+          "validateSchemas": true
+        }
+
+        ````
     children:
       - url: https://jsonplaceholder.typicode.com/posts
         name: Posts
@@ -97,8 +161,8 @@ collection:
     meta:
       id: fld_49d67089614a41aebb56e4a52fe85570
       created: 1764857220033
-      modified: 1764859105628
-      sortKey: -1764856708365
+      modified: 1764882424702
+      sortKey: -1764856708383.75
       description: ""
     children:
       - url: https://jsonplaceholder.typicode.com/posts/1
@@ -106,9 +170,60 @@ collection:
         meta:
           id: req_d52be1ae0efe496981f98c887120da91
           created: 1764857327781
-          modified: 1764858962041
+          modified: 1764862260958
           isPrivate: false
-          description: ""
+          description: |-
+            # Rate Limit Plugin
+
+            While you can certainly return 429 from any custom error file, this plugin is better at simulating a real world rate limiting scenario.
+
+            Given the following config...
+
+            ```
+            1. {
+            2.    "$schema": "https://raw.githubusercontent.com/dotnet/dev-proxy/main/schemas/v0.25.0/rc.schema.json",
+            3.    "plugins": [
+            4.        {
+            5.            "name": "RateLimitingPlugin",
+            6.            "enabled": true,
+            7.            "pluginPath": "~appFolder/plugins/dev-proxy-plugins.dll",
+            8.            "configSection": "rateLimiting"
+            9.        }
+            10.    ],
+            11.     "rateLimiting": {
+            12.        "costPerRequest": 1,
+            13.        "rateLimit": 3,
+            14.        "resetTimeWindowSeconds" : 10
+            15.    },
+            16.    "urlsToWatch": [
+            17.        "https://jsonplaceholder.typicode.com/*"
+            18.    ],
+            19.    "logLevel": "information",
+            20.    "newVersionNotification": "stable",
+            21.    "showSkipMessages": true
+            22. }
+            ```
+
+            ... requests will be throttled if you exceed more than 3 per 10 second sliding window. 
+
+            Run the request and observe how "Resources remaining" goes down until you have none left, at which point you get throttled. Every 10 seconds your allotment resets.
+
+            A simple error response would not simulate this behavior.
+
+            ## How It Works
+
+            - **Cost Per Request**: How many “credits” each request consumes.  
+            - **Rate Limit**: The maximum number of credits you can use within the specified time window.  
+            - **Reset Time Window**: The time (in seconds) after which your credits are replenished.  
+
+            ## Usage Tips
+
+            1. **Local Development**  
+               - Edit the `rateLimit` parameters in your configuration based on your needs.  
+            2. **Monitoring**  
+               - Use logs to see when you’ve reached the request limit.  
+            3. **Handling 429 Errors**  
+               - If throttled, you’ll receive a `429 Too Many Requests` response. You can then retry after the reset interval.  
           sortKey: -1764857327781
         method: GET
         headers:
@@ -135,16 +250,139 @@ collection:
             send: true
             store: true
           rebuildPath: true
+  - name: 4 Mock
+    meta:
+      id: fld_a8bde68deeab407398dc9ac3ec46c843
+      created: 1764882413111
+      modified: 1764885263052
+      sortKey: -1764856708382.1875
+      description: >-
+        ### Mock response
+
+
+        1. Obtain an API key for free at https://api.nasa.gov/
+
+        1. Set an Insomnia nasa_key environment variable or just paste it over
+        the variable in the request URL.
+
+        1. Run the APOD request. Edit `mock-request.json` and observe how the
+        response changes.
+    children:
+      - url: https://api.nasa.gov/planetary/apod
+        name: APOD
+        meta:
+          id: req_d82b6803a5ad403e9f63d75c5e66c3c9
+          created: 1764882657907
+          modified: 1764883620110
+          isPrivate: false
+          description: ""
+          sortKey: -1764882657907
+        method: GET
+        parameters:
+          - name: api_key
+            value: "{{nasa_key}}"
+            description: ""
+            disabled: false
+            type: text
+            multiline: false
+        headers:
+          - name: User-Agent
+            value: insomnia/12.1.0
+            description: ""
+            disabled: false
+        scripts:
+          afterResponse: |+
+            
+            const jsonBody = insomnia.response.json();
+            const url = jsonBody.url;
+
+            if(jsonBody.media_type === "image") {
+            	
+            	const resp = await insomnia.sendRequest(
+            		url,
+            		(err, resp) => {
+            			if (err != null) {
+            				throw err;
+            			}
+            		}
+            	);
+            }
+
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: 5 File Response
+    meta:
+      id: fld_016ab20a9f96429dada778fe79a516f2
+      created: 1764885256030
+      modified: 1764885290696
+      sortKey: -1764856708380.625
+      description: >-
+        ### Respond with contents of file
+
+
+        #### If you are not familiar with mocks yet, see this first -
+        [MockGenerator](../MockGenerator/README.md)
+
+
+        1. Using a browser so you can see the image response, go to any NASA
+        Picture of the Day. For example:
+        https://apod.nasa.gov/apod/image/2503/iss072e574593_DonPetit2048.jpg
+
+        1. Now run devproxy from this folder.
+
+        1. Refresh the browser to see the mock response return the static image.
+
+
+        The "body" property of mock.json refers to a local file - apod.png. It
+        uses the "@" syntax to direct Dev Proxy to respond with the contents of
+        a file.
+
+
+        `"body": "@apod.png",`
+    children:
+      - url: https://apod.nasa.gov/apod/
+        name: APOD
+        meta:
+          id: req_8f1b6ad26343461ea092373934c126c0
+          created: 1764885344785
+          modified: 1764886101673
+          isPrivate: false
+          description: ""
+          sortKey: -1764885344785
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.1.0
+            description: ""
+            disabled: false
+          - name: Cache-Control
+            value: no-cache
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
 cookieJar:
   name: Default Jar
   meta:
     id: jar_4b6f5908145a84f3ea823d3c2a7e5ded3df1d6d1
     created: 1764797759417
-    modified: 1764859105620
+    modified: 1764884852215
 environments:
   name: Base Environment
   meta:
     id: env_4b6f5908145a84f3ea823d3c2a7e5ded3df1d6d1
     created: 1764797759415
-    modified: 1764859105626
+    modified: 1764884852222
     isPrivate: false
