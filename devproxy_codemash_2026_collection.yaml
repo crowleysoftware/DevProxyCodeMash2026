@@ -254,8 +254,8 @@ collection:
     meta:
       id: fld_a8bde68deeab407398dc9ac3ec46c843
       created: 1764882413111
-      modified: 1764885263052
-      sortKey: -1764856708382.1875
+      modified: 1764945290625
+      sortKey: -1764856708383.5547
       description: >-
         ### Mock response
 
@@ -320,8 +320,8 @@ collection:
     meta:
       id: fld_016ab20a9f96429dada778fe79a516f2
       created: 1764885256030
-      modified: 1764885290696
-      sortKey: -1764856708380.625
+      modified: 1765118112881
+      sortKey: -1764856708383.5059
       description: >-
         ### Respond with contents of file
 
@@ -351,9 +351,32 @@ collection:
         meta:
           id: req_8f1b6ad26343461ea092373934c126c0
           created: 1764885344785
-          modified: 1764886101673
+          modified: 1764945039191
           isPrivate: false
-          description: ""
+          description: >-
+            ### Respond with contents of file
+
+
+            #### If you are not familiar with mocks yet, see this first -
+            [MockGenerator](../MockGenerator/README.md)
+
+
+            1. Using a browser so you can see the image response, go to any NASA
+            Picture of the Day. For example:
+            https://apod.nasa.gov/apod/image/2503/iss072e574593_DonPetit2048.jpg
+
+            1. Now run devproxy from this folder.
+
+            1. Refresh the browser to see the mock response return the static
+            image.
+
+
+            The "body" property of mock.json refers to a local file - apod.png.
+            It uses the "@" syntax to direct Dev Proxy to respond with the
+            contents of a file.
+
+
+            `"body": "@apod.png",`
           sortKey: -1764885344785
         method: GET
         headers:
@@ -373,16 +396,200 @@ collection:
             send: true
             store: true
           rebuildPath: true
+  - name: 6 Mock Generator
+    meta:
+      id: fld_91df8fcc2aba4a2d9a4f62b30c96fcac
+      created: 1764945255112
+      modified: 1765118109707
+      sortKey: -1764856708383.457
+      description: >-
+        ## To generate a mock response file :
+
+
+        1. run `devproxy`
+
+        1. start recording (press "r" in the terminal)
+
+        1. execute the requests you want to generate mocks for
+
+        1. stop recording (press "s" in the terminal)
+
+
+        Once recording stops a json file will be created in the current working
+        folder. If the response body is binary, like an image, then there will
+        also be a .bin file created. The bin file is referenced from the json
+        with the same syntax used in the "5 File Response" example.
+
+         Use that file as the value for `mockFile` when configuring the mockResponsePlugin (see 4 Mock).
+    children:
+      - url: https://api.nasa.gov/planetary/apod?api_key={{nasa_key}}
+        name: APOD API
+        meta:
+          id: req_5ce44befea5d4c83944bf5aa5ea27298
+          created: 1764945341645
+          modified: 1764947635042
+          isPrivate: false
+          description: This request will set a variable named imgUrl. The value is pulled
+            out of the response body and is the url of the image file for
+            astronomy picture of the day. That variable is used by the next
+            request (APOD) to retrieve today's image.
+          sortKey: -1764945414620
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.1.0
+            description: ""
+            disabled: false
+        scripts:
+          afterResponse: |-
+            const jsonBody = insomnia.response.json();
+            const url = jsonBody.url;
+
+            if(jsonBody.media_type === "image") {
+            	
+            	const myFolder = insomnia.parentFolders.get('6 Mock Generator');
+            	if (myFolder === undefined) {
+            		throw Error('myFolder not found');
+            	}
+            	myFolder.environment.set('imgUrl', url);
+            }
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{imgUrl}}"
+        name: APOD
+        meta:
+          id: req_0043fbab8e524c959e24059128a1fcea
+          created: 1764945487395
+          modified: 1764947947344
+          isPrivate: false
+          description: >
+            Direct link to the image for Astronomy Picture of the Day. Be aware
+            that if the APOD is not an image (could be a video) then this won't
+            work because there is a script on the APOD API request to only set
+            imgUrl variable when the response body identifies the media type as
+            an image.
+          sortKey: -1764945414520
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.1.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+    environment:
+      imgUrl: https://apod.nasa.gov/apod/image/2512/sunspectrum_mpso_1080.jpg
+  - name: 7 Discover
+    meta:
+      id: fld_5ff7b0f3adcd40a6a2a3a74fd82fc1e1
+      created: 1765117689936
+      modified: 1765118687021
+      sortKey: -1764856708383.164
+      description: ""
+    children:
+      - url: https://learn.microsoft.com/en-us/microsoft-cloud/dev/dev-proxy/overview
+        name: Simulate an app
+        meta:
+          id: req_6c7d75baac854724ad287830789b411b
+          created: 1765118131177
+          modified: 1765118683284
+          isPrivate: false
+          description: >+
+            
+            ### Discovers URLs that your app is calling so you know what to use
+            for urlsToWatch configuration
+
+
+            The devproxyrc.json file in this folder is an exact copy of
+            ~appFolder/presets/urls-to-watch.json.
+
+
+            This is for demonstration only, normally to discover urls you don't
+            create your own config file, you just use the already supplied one:
+
+
+            ```
+
+            devproxy --config-file "~appFolder\config\urls-to-watch.json"
+            --watch-process-names msedge
+
+            ```
+
+
+            Replace "msedge" with the name of the process to watch.
+
+            When you have finished operating your app to discover URLs, stop
+            proxy with ctrl+c. The plain text reporter will generate a txt file
+            that lists the discovered urls.
+
+          sortKey: -1765118131177
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.1.0
+            description: ""
+            disabled: false
+        scripts:
+          afterResponse: >
+            
+            await insomnia.sendRequest(
+            	'https://learn.microsoft.com/en-us/microsoft-cloud/dev/dev-proxy/how-to/test-my-app-with-random-errors',
+            	(err, resp) => {
+            		if (err != null) {
+            			throw err;
+            		}
+            	}
+            );
+
+
+            await insomnia.sendRequest(
+            	'https://learn.microsoft.com/en-us/microsoft-cloud/dev/dev-proxy/how-to/simulate-rate-limit-api-responses',
+            	(err, resp) => {
+            		if (err != null) {
+            			throw err;
+            		}
+            	}
+            );
+
+
+            await insomnia.sendRequest(
+            	'https://learn.microsoft.com/en-us/microsoft-cloud/dev/dev-proxy/how-to/simulate-crud-api',
+            	(err, resp) => {
+            		if (err != null) {
+            			throw err;
+            		}
+            	}
+            );
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
 cookieJar:
   name: Default Jar
   meta:
     id: jar_4b6f5908145a84f3ea823d3c2a7e5ded3df1d6d1
     created: 1764797759417
-    modified: 1764884852215
+    modified: 1765118687010
 environments:
   name: Base Environment
   meta:
     id: env_4b6f5908145a84f3ea823d3c2a7e5ded3df1d6d1
     created: 1764797759415
-    modified: 1764884852222
+    modified: 1765118687019
     isPrivate: false
