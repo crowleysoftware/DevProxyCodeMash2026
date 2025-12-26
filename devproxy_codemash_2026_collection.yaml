@@ -161,7 +161,7 @@ collection:
     meta:
       id: fld_49d67089614a41aebb56e4a52fe85570
       created: 1764857220033
-      modified: 1764882424702
+      modified: 1766757343460
       sortKey: -1764856708383.75
       description: ""
     children:
@@ -580,16 +580,93 @@ collection:
             send: true
             store: true
           rebuildPath: true
+  - name: OpenAI
+    meta:
+      id: fld_022993d4df52456fb6355e816d0399a4
+      created: 1766758803895
+      modified: 1766758803895
+      sortKey: -1766758803895
+      description: ""
+    children:
+      - url: https://api.openai.com/v1/chat/completions
+        name: Sample OpenAI
+        meta:
+          id: req_516a106f66d34f079f4848e84355586e
+          created: 1766758814614
+          modified: 1766762267655
+          isPrivate: false
+          description: >-
+            Sends a completion request to Open AI. 
+
+
+            If DevProxy is running with the OpenAIMockResponsePlugin then
+            DevProxy will call your local language model client instead. This
+            way you get actual lm completions without incurring costs with Open
+            AI. 
+
+
+            Note that DevProxy only supports the legacy completion endpoint of
+            Open AI. For more functionality you are expected to be using Azure
+            OpenAI instead.
+          sortKey: -1766758814614
+        method: POST
+        body:
+          mimeType: application/json
+          text: >-
+            {
+                "model": "gpt-4.1",
+                "prompt": "What is the difference between PLA and TPU filament?",
+            	  "max_tokens": 250,
+            	  "temperature": 0
+             }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+          - name: Authorization
+            value: Bearer {{ _.OpenAPIKey }}
+            description: ""
+            disabled: false
+        authentication:
+          type: none
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
 cookieJar:
   name: Default Jar
   meta:
     id: jar_4b6f5908145a84f3ea823d3c2a7e5ded3df1d6d1
     created: 1764797759417
-    modified: 1765118687010
+    modified: 1766760914142
+  cookies:
+    - id: a59da612-9419-43fa-b10e-62b4c982ec5c
+      key: __cf_bm
+      value: vcXDFXsBaWt.6s1GWuiz9cqrMZzlnQf4Z174Fr0dYiM-1766760914-1.0.1.1-DAfx27DP_Wv_LeowhHHT44PFiXZXRPqQcP5sFwXW0casPi3uEfQoCNF4PsOTUpLMO0eD1dQURIwkRqfBh.xKe0FhKKkr93ta4uFTMMV5jrI
+      domain: api.openai.com
+      path: /
+      secure: true
+      httpOnly: true
+      hostOnly: false
+    - id: b34c16a9-a094-4dd7-988d-1ebafd68ea72
+      key: _cfuvid
+      value: 1dt0gLeD5BsT7HxR9xxAAbohcaM9MFYyO6ZKynvh0IE-1766759566343-0.0.1.1-604800000
+      domain: api.openai.com
+      path: /
+      secure: true
+      httpOnly: true
+      hostOnly: false
 environments:
   name: Base Environment
   meta:
     id: env_4b6f5908145a84f3ea823d3c2a7e5ded3df1d6d1
     created: 1764797759415
-    modified: 1765118687019
+    modified: 1766757343460
     isPrivate: false
