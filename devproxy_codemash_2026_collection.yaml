@@ -593,7 +593,7 @@ collection:
         meta:
           id: req_516a106f66d34f079f4848e84355586e
           created: 1766758814614
-          modified: 1766762267655
+          modified: 1766763690792
           isPrivate: false
           description: >-
             Sends a completion request to Open AI. 
@@ -612,10 +612,10 @@ collection:
         method: POST
         body:
           mimeType: application/json
-          text: >-
+          text: |-
             {
                 "model": "gpt-4.1",
-                "prompt": "What is the difference between PLA and TPU filament?",
+                "prompt": "Tell me a dad joke.",
             	  "max_tokens": 250,
             	  "temperature": 0
              }
@@ -627,7 +627,7 @@ collection:
             description: ""
             disabled: false
           - name: Authorization
-            value: Bearer {{ _.OpenAPIKey }}
+            value: Bearer YouDontNeedAKeyIfYouHitLocalClient
             description: ""
             disabled: false
         authentication:
