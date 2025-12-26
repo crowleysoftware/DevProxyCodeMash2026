@@ -593,7 +593,7 @@ collection:
         meta:
           id: req_516a106f66d34f079f4848e84355586e
           created: 1766758814614
-          modified: 1766763690792
+          modified: 1766768304067
           isPrivate: false
           description: >-
             Sends a completion request to Open AI. 
@@ -614,8 +614,8 @@ collection:
           mimeType: application/json
           text: |-
             {
-                "model": "gpt-4.1",
-                "prompt": "Tell me a dad joke.",
+                "model": "mistral",
+                "prompt": "How do electric eels produce electricity?",
             	  "max_tokens": 250,
             	  "temperature": 0
              }
